@@ -9,7 +9,7 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
-import { API_ENDPOINT } from './api.jsx';
+import { API_ENDPOINT } from "./Api/api.jsx";
 
 function Login() {
   const navigate = useNavigate();

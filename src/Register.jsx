@@ -11,7 +11,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { API_ENDPOINT } from "./api.jsx";
+import { API_ENDPOINT } from "./Api/api.jsx";
 
 
 function Register() {
