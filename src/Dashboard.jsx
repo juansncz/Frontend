@@ -7,7 +7,7 @@ import Nav from 'react-bootstrap/Nav';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
-import { FaUser, FaCog, FaSignOutAlt, FaEye, FaTrash } from 'react-icons/fa';
+import { FaUser, FaCog, FaSignOutAlt, FaEdit, FaTrash } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
@@ -15,10 +15,8 @@ import Form from 'react-bootstrap/Form';
 function Dashboard() {
     const [user, setUser] = useState(null);
     const [users, setUsers] = useState([]); // State for users table
-    const [newUser, setNewUser] = useState({ username: '', fullname: '', password: '' });
-    const [showModal, setShowModal] = useState(false); // State to show modal
-    const [userInfo, setUserInfo] = useState(null); // State for user info when "Read" button is clicked
-    const [showUserInfoModal, setShowUserInfoModal] = useState(false); // State for displaying user info modal
+    const [showModal, setShowModal] = useState(false); // State for modal visibility
+    const [selectedUser, setSelectedUser] = useState(null); // State for the user being viewed
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -34,7 +32,7 @@ function Dashboard() {
                 const decodedToken = jwtDecode(parsedToken);
                 setUser(decodedToken);
 
-                const response = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/users`, {
+                const response = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/api/users`, {
                     headers: {
                         Authorization: `Bearer ${parsedToken}`,
                     },
@@ -61,9 +59,9 @@ function Dashboard() {
         navigate('/login');
     };
 
-    const handleRead = (user) => {
-        setUserInfo(user); // Set the user info for the modal
-        setShowUserInfoModal(true); // Show the modal with user info
+    const handleView = (userToView) => {
+        setSelectedUser(userToView); // Set the selected user to view
+        setShowModal(true); // Show the modal
     };
 
     const handleDelete = async (id) => {
@@ -88,7 +86,7 @@ function Dashboard() {
         if (result.isConfirmed) {
             try {
                 const token = JSON.parse(localStorage.getItem('token'));
-                const response = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/users/${userIdToDelete}`, {
+                const response = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/api/users/${userIdToDelete}`, {
                     method: 'DELETE',
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -100,45 +98,11 @@ function Dashboard() {
                 }
 
                 Swal.fire('Deleted!', 'The user has been deleted.', 'success');
-                setUsers(users.filter(user => user.user_id !== userIdToDelete)); // Adjusted to `user_id`
+                setUsers(users.filter(user => user.user_id !== userIdToDelete)); // Adjusted to `user.user_id`
             } catch (error) {
                 console.error('Error deleting user:', error);
                 Swal.fire('Error', 'There was an issue deleting the user.', 'error');
             }
-        }
-    };
-
-    // Handle creating a new user
-    const handleCreateUser = async () => {
-        try {
-            const token = JSON.parse(localStorage.getItem('token'));
-            const response = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/users`, {
-                method: 'POST',
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(newUser),
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to create user');
-            }
-
-            const newUserData = await response.json();
-            console.log('New user data:', newUserData); // Debugging response data
-
-            if (newUserData.user_id) {
-                // Ensure that the new user data includes `user_id`
-                setUsers([...users, newUserData]); // Add the new user to the state
-                Swal.fire('Created!', 'The user has been created.', 'success');
-                setShowModal(false); // Close the modal
-            } else {
-                Swal.fire('Error', 'No user_id returned from the backend', 'error');
-            }
-        } catch (error) {
-            console.error('Error creating user:', error);
-            Swal.fire('Error', 'There was an issue creating the user.', 'error');
         }
     };
 
@@ -148,9 +112,6 @@ function Dashboard() {
                 <Container>
                     <Navbar.Brand href="#home">Naga College Foundation, Inc.</Navbar.Brand>
                     <Nav className="ms-auto">
-                        <Nav.Link href="#users">Users</Nav.Link>
-                        <Nav.Link href="#departments">Departments</Nav.Link>
-                        <Nav.Link href="#courses">Courses</Nav.Link>
                         <NavDropdown title={user ? `Hello, ${user.username}` : 'More'} id="user-nav-dropdown">
                             <NavDropdown.Item href="#">
                                 <FaUser className="me-2" />
@@ -171,14 +132,6 @@ function Dashboard() {
 
             <Container className="mt-4">
                 <h2>Users</h2>
-                <Button
-                    variant="success"
-                    className="mb-3"
-                    onClick={() => setShowModal(true)}
-                >
-                    Create User
-                </Button>
-
                 <Table striped bordered hover responsive>
                     <thead>
                         <tr>
@@ -199,14 +152,14 @@ function Dashboard() {
                                         variant="info"
                                         size="sm"
                                         className="me-2"
-                                        onClick={() => handleRead(user)}
+                                        onClick={() => handleView(user)} // Trigger view modal
                                     >
-                                        <FaEye /> Read
+                                        <FaEdit /> View
                                     </Button>
                                     <Button
                                         variant="danger"
                                         size="sm"
-                                        onClick={() => handleDelete(user.id)}
+                                        onClick={() => handleDelete(user.user_id)} // Corrected to `user.user_id`
                                     >
                                         <FaTrash /> Delete
                                     </Button>
@@ -217,74 +170,44 @@ function Dashboard() {
                 </Table>
             </Container>
 
-            {/* Modal for creating a new user */}
-            <Modal show={showModal} onHide={() => setShowModal(false)}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Create New User</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form>
-                        <Form.Group controlId="formUsername">
-                            <Form.Label>Username</Form.Label>
-                            <Form.Control
-                                type="text"
-                                placeholder="Enter username"
-                                value={newUser.username}
-                                onChange={(e) => setNewUser({ ...newUser, username: e.target.value })}
-                            />
-                        </Form.Group>
+            {/* Modal for Viewing User */}
+            {selectedUser && (
+                <Modal show={showModal} onHide={() => setShowModal(false)}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>View User</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Form>
+                            <Form.Group controlId="username">
+                                <Form.Label>Username</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    defaultValue={selectedUser.username}
+                                    readOnly // Read-only field
+                                />
+                            </Form.Group>
 
-                        <Form.Group controlId="formFullname" className="mt-3">
-                            <Form.Label>Full Name</Form.Label>
-                            <Form.Control
-                                type="text"
-                                placeholder="Enter full name"
-                                value={newUser.fullname}
-                                onChange={(e) => setNewUser({ ...newUser, fullname: e.target.value })}
-                            />
-                        </Form.Group>
+                            <Form.Group controlId="fullname" className="mt-3">
+                                <Form.Label>Full Name</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    defaultValue={selectedUser.fullname}
+                                    readOnly // Read-only field
+                                />
+                            </Form.Group>
 
-                        <Form.Group controlId="formPassword" className="mt-3">
-                            <Form.Label>Password</Form.Label>
-                            <Form.Control
-                                type="password"
-                                placeholder="Enter password"
-                                value={newUser.password}
-                                onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
-                            />
-                        </Form.Group>
-                    </Form>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setShowModal(false)}>
-                        Close
-                    </Button>
-                    <Button variant="primary" onClick={handleCreateUser}>
-                        Create User
-                    </Button>
-                </Modal.Footer>
-            </Modal>
-
-            {/* Modal for displaying user information */}
-            <Modal show={showUserInfoModal} onHide={() => setShowUserInfoModal(false)}>
-                <Modal.Header closeButton>
-                    <Modal.Title>User Information</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    {userInfo && (
-                        <>
-                            <p><strong>Username:</strong> {userInfo.username}</p>
-                            <p><strong>Full Name:</strong> {userInfo.fullname}</p>
-                            <p><strong>User ID:</strong> {userInfo.user_id}</p>
-                        </>
-                    )}
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setShowUserInfoModal(false)}>
-                        Close
-                    </Button>
-                </Modal.Footer>
-            </Modal>
+                            <Form.Group controlId="ID" className="mt-3">
+                                <Form.Label>User ID</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    defaultValue={selectedUser.user_id}
+                                    readOnly // Read-only field
+                                />
+                            </Form.Group>
+                        </Form>
+                    </Modal.Body>
+                </Modal>
+            )}
         </>
     );
 }

@@ -11,8 +11,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-
-import { API_ENDPOINT } from './Api';
+import { API_ENDPOINT } from './api';
 
 function Register() {
   const navigate = useNavigate();
