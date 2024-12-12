@@ -7,16 +7,22 @@ import Nav from 'react-bootstrap/Nav';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
-import { FaUser, FaCog, FaSignOutAlt, FaEdit, FaTrash } from 'react-icons/fa';
+import { FaUser, FaCog, FaSignOutAlt, FaEdit, FaTrash, FaPlus } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 
 function Dashboard() {
     const [user, setUser] = useState(null);
-    const [users, setUsers] = useState([]); // State for users table
-    const [showModal, setShowModal] = useState(false); // State for modal visibility
-    const [selectedUser, setSelectedUser] = useState(null); // State for the user being viewed
+    const [users, setUsers] = useState([]);
+    const [showModal, setShowModal] = useState(false);
+    const [showAddUserModal, setShowAddUserModal] = useState(false); // State for add user modal
+    const [newUser, setNewUser] = useState({
+        fullname: '',
+        username: '',
+        password: ''
+    });
+    const [selectedUser, setSelectedUser] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -43,7 +49,7 @@ function Dashboard() {
                 }
 
                 const usersData = await response.json();
-                console.log('Fetched users:', usersData); // Debugging the response data
+                console.log('Fetched users:', usersData);
                 setUsers(usersData);
             } catch (error) {
                 console.error('Error:', error);
@@ -60,12 +66,12 @@ function Dashboard() {
     };
 
     const handleView = (userToView) => {
-        setSelectedUser(userToView); // Set the selected user to view
-        setShowModal(true); // Show the modal
+        setSelectedUser(userToView);
+        setShowModal(true);
     };
 
     const handleDelete = async (id) => {
-        const userIdToDelete = id || user.user_id; // Fallback to `user.user_id`
+        const userIdToDelete = id || user.user_id;
 
         if (!userIdToDelete) {
             console.error('User ID is missing');
@@ -98,7 +104,7 @@ function Dashboard() {
                 }
 
                 Swal.fire('Deleted!', 'The user has been deleted.', 'success');
-                setUsers(users.filter(user => user.user_id !== userIdToDelete)); // Adjusted to `user.user_id`
+                setUsers(users.filter(user => user.user_id !== userIdToDelete));
             } catch (error) {
                 console.error('Error deleting user:', error);
                 Swal.fire('Error', 'There was an issue deleting the user.', 'error');
@@ -106,6 +112,51 @@ function Dashboard() {
         }
     };
 
+    // Handle the form submission for adding a new user
+    const handleAddUser = async () => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/api/auth/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    fullname: newUser.fullname,
+                    username: newUser.username,
+                    password: newUser.password,
+                }),
+            });
+    
+            if (!response.ok) {
+                throw new Error('Failed to create user');
+            }
+    
+            const createdUser = await response.json();
+            console.log('Created user:', createdUser);  // Log to verify the response structure
+            Swal.fire('Success', 'User has been created.', 'success');
+    
+            // Refetch the users to ensure the new user is in the list
+            const token = JSON.parse(localStorage.getItem('token'));
+            const usersResponse = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/api/users`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+    
+            if (!usersResponse.ok) {
+                throw new Error('Failed to fetch users');
+            }
+    
+            const usersData = await usersResponse.json();
+            setUsers(usersData); // Update users state with the latest list
+    
+            setShowAddUserModal(false); // Close the modal after adding the user
+        } catch (error) {
+            console.error('Error adding user:', error);
+            Swal.fire('Error', 'There was an issue creating the user.', 'error');
+        }
+    };
+    
     return (
         <>
             <Navbar bg="success" variant="dark">
@@ -126,6 +177,16 @@ function Dashboard() {
                                 Logout
                             </NavDropdown.Item>
                         </NavDropdown>
+
+                        {/* Add User Button */}
+                        <Button
+                            variant="primary"
+                            className="ms-2"
+                            onClick={() => setShowAddUserModal(true)} // Show add user modal
+                        >
+                            <FaPlus className="me-2" />
+                            Add User
+                        </Button>
                     </Nav>
                 </Container>
             </Navbar>
@@ -152,14 +213,14 @@ function Dashboard() {
                                         variant="info"
                                         size="sm"
                                         className="me-2"
-                                        onClick={() => handleView(user)} // Trigger view modal
+                                        onClick={() => handleView(user)}
                                     >
                                         <FaEdit /> View
                                     </Button>
                                     <Button
                                         variant="danger"
                                         size="sm"
-                                        onClick={() => handleDelete(user.user_id)} // Corrected to `user.user_id`
+                                        onClick={() => handleDelete(user.user_id)}
                                     >
                                         <FaTrash /> Delete
                                     </Button>
@@ -183,7 +244,7 @@ function Dashboard() {
                                 <Form.Control
                                     type="text"
                                     defaultValue={selectedUser.username}
-                                    readOnly // Read-only field
+                                    readOnly
                                 />
                             </Form.Group>
 
@@ -192,7 +253,7 @@ function Dashboard() {
                                 <Form.Control
                                     type="text"
                                     defaultValue={selectedUser.fullname}
-                                    readOnly // Read-only field
+                                    readOnly
                                 />
                             </Form.Group>
 
@@ -201,13 +262,61 @@ function Dashboard() {
                                 <Form.Control
                                     type="text"
                                     defaultValue={selectedUser.user_id}
-                                    readOnly // Read-only field
+                                    readOnly
                                 />
                             </Form.Group>
                         </Form>
                     </Modal.Body>
                 </Modal>
             )}
+
+            {/* Modal for Adding New User */}
+            <Modal show={showAddUserModal} onHide={() => setShowAddUserModal(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Add New User</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form>
+                        <Form.Group controlId="fullname">
+                            <Form.Label>Full Name</Form.Label>
+                            <Form.Control
+                                type="text"
+                                value={newUser.fullname}
+                                onChange={(e) => setNewUser({ ...newUser, fullname: e.target.value })}
+                                required
+                            />
+                        </Form.Group>
+
+                        <Form.Group controlId="username" className="mt-3">
+                            <Form.Label>Username</Form.Label>
+                            <Form.Control
+                                type="text"
+                                value={newUser.username}
+                                onChange={(e) => setNewUser({ ...newUser, username: e.target.value })}
+                                required
+                            />
+                        </Form.Group>
+
+                        <Form.Group controlId="password" className="mt-3">
+                            <Form.Label>Password</Form.Label>
+                            <Form.Control
+                                type="password"
+                                value={newUser.password}
+                                onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
+                                required
+                            />
+                        </Form.Group>
+                    </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowAddUserModal(false)}>
+                        Close
+                    </Button>
+                    <Button variant="primary" onClick={handleAddUser}>
+                        Add User
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </>
     );
 }
