@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import jwt_decode from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
@@ -40,7 +40,7 @@ function Dashboard() {
                 }
 
                 const parsedToken = JSON.parse(token);
-                const decodedToken = jwt_decode(parsedToken);
+                const decodedToken = jwtDecode(parsedToken);
                 setUser(decodedToken);
 
                 const response = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/api/users`, {
