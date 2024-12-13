@@ -1,0 +1,72 @@
+/* dashboard.css */
+
+/* Modify table to be more suitable for a lighter dark theme */
+.table {
+    background-color: #f5f5f5;  /* Lighter background color */
+    color: #333333;  /* Dark text for better contrast and readability */
+    border-radius: 8px; /* Rounded corners for a modern look */
+    box-shadow: 0px 8px 16px rgba(205, 202, 202, 0.3);  /* Light shadow effect for table */
+}
+
+/* Styling for the table header */
+.table thead {
+    background-color: #dcdcdc;  /* Lighter background for header */
+    color: #333333;  /* Dark text for headers */
+    font-weight: bold; /* Bold text for header */
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+/* Alternate row background for better readability */
+.table tbody tr:nth-child(even) {
+    background-color: #ebebeb;  /* Lighter gray for even rows */
+}
+
+/* Highlight row on hover */
+.table tbody tr:hover {
+    background-color: #c9c9c9;  /* Slightly darker gray on hover for contrast */
+}
+
+/* Add padding inside table cells for better spacing */
+.table td, .table th {
+    padding: 15px; /* Padding inside the table */
+}
+
+/* Make the buttons consistent with the lighter theme */
+.table td .btn {
+    margin-right: 5px;
+    border-radius: 5px;  /* Rounded buttons */
+    font-size: 1em;  /* Font size consistent with the theme */
+}
+
+/* Style the table action buttons */
+.table td .btn-info {
+    background-color: #28a745; /* Green color for info button */
+    color: #ffffff; /* White text in info button */
+}
+
+.table td .btn-warning {
+    background-color: #ffc107; /* Yellow color for warning button */
+    color: #333; /* Darker text color */
+}
+
+.table td .btn-danger {
+    background-color: #dc3545; /* Red color for delete button */
+    color: #ffffff; /* White text in danger button */
+}
+
+/* Button hover effects */
+.table td .btn:hover {
+    opacity: 0.8;
+}
+
+body {
+    font-family: 'Source Code Pro', monospace;  /* Tech-inspired font */
+    background-color: #f5f5f5;  /* Lighter background for body */
+}
+
+h1, h2, h3, h4 {
+    font-family: 'Montserrat', sans-serif;
+    color: #333333;  /* Dark text color for headings */
+    font-weight: 600;
+}

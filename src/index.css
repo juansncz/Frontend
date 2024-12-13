@@ -5,8 +5,13 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
+  background-color: #2a2a2a; /* Dark background with a mysterious vibe */
+  --gryffindor-red: #9b111e; /* Gryffindor red */
+  --gryffindor-gold: #f8b704; /* Gryffindor gold */
+  --hufflepuff-yellow: #f0c330; /* Hufflepuff yellow */
+  --ravenclaw-blue: #003b5c; /* Ravenclaw blue */
+  --slytherin-green: #2d6a4f; /* Slytherin green */
+  
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -15,24 +20,32 @@
 
 a {
   font-weight: 500;
-  color: #646cff;
+  color: var(--gryffindor-gold);
   text-decoration: inherit;
 }
+
 a:hover {
-  color: #535bf2;
+  color: var(--ravenclaw-blue);
 }
 
 body {
   margin: 0;
   display: flex;
+  flex-direction: column;  /* Stack elements vertically */
   place-items: center;
+  justify-content: center;  /* Center the content */
+  align-items: center;     /* Align items horizontally in the center */
   min-width: 320px;
   min-height: 100vh;
+  background-color: #2a2a2a; /* Dark theme */
+  padding: 2rem;
 }
 
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+  color: var(--gryffindor-red);
+  margin-bottom: 1rem; /* Add space below the header */
 }
 
 button {
@@ -42,13 +55,17 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: var(--gryffindor-red); /* Gryffindor Red for buttons */
   cursor: pointer;
   transition: border-color 0.25s;
+  color: #ffffff;
+  margin-top: 1.5rem;  /* Add space above the button */
 }
+
 button:hover {
-  border-color: #646cff;
+  border-color: var(--gryffindor-gold); /* Gryffindor Gold hover */
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
@@ -60,9 +77,42 @@ button:focus-visible {
     background-color: #ffffff;
   }
   a:hover {
-    color: #747bff;
+    color: var(--gryffindor-red);
   }
   button {
     background-color: #f9f9f9;
   }
+}
+
+/* Custom Hogwarts house styles */
+.gryffindor {
+  background-color: var(--gryffindor-red);
+  color: var(--gryffindor-gold);
+  padding: 1em;
+  margin: 1rem 0; /* Add margin to elements with Gryffindor style */
+  text-align: center;
+}
+
+.hufflepuff {
+  background-color: var(--hufflepuff-yellow);
+  color: #333;
+  padding: 1em;
+  margin: 1rem 0; /* Add margin */
+  text-align: center;
+}
+
+.ravenclaw {
+  background-color: var(--ravenclaw-blue);
+  color: var(--gryffindor-gold); /* Contrast with yellow */
+  padding: 1em;
+  margin: 1rem 0; /* Add margin */
+  text-align: center;
+}
+
+.slytherin {
+  background-color: var(--slytherin-green);
+  color: #ffffff;
+  padding: 1em;
+  margin: 1rem 0; /* Add margin */
+  text-align: center;
 }

@@ -13,7 +13,6 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { API_ENDPOINT } from "./Api/api.jsx";
 
-
 function Register() {
   const navigate = useNavigate();
   const [fullname, setFullName] = useState('');
@@ -59,9 +58,19 @@ function Register() {
 
   return (
     <>
-      <Navbar bg="success" variant="dark">
+      <Navbar style={{ backgroundColor: '#0a0a0a', backgroundImage: 'linear-gradient(to right, #00d2ff, #00a1ff)', padding: '1rem 0' }} variant="dark">
         <Container>
-          <Navbar.Brand>Naga College Foundation, Inc.</Navbar.Brand>
+          <Navbar.Brand 
+            href="#home" 
+            style={{
+              color: '#eae2b7', 
+              fontWeight: 'bold', 
+              fontFamily: 'monospace', 
+              fontSize: '1.8rem'
+            }}
+          >
+            Cryptoset Institute of Computing
+          </Navbar.Brand>
         </Container>
       </Navbar>
 
@@ -80,14 +89,14 @@ function Register() {
                 }}
               />
             </div>
-            <div className="card shadow" style={{ borderRadius: '10px', padding: '20px' }}>
+            <div className="card shadow" style={{ borderRadius: '12px', padding: '20px', backgroundColor: '#ffffff', borderColor: '#fcbf49' }}>
               <div className="card-body">
-                <h5 className="text-center mb-4 fs-3 fw-bold">Register</h5>
+                <h5 className="text-center mb-4 fs-3 fw-bold" style={{ color: '#f77f00', fontFamily: 'monospace' }}>Register</h5>
                 <Form onSubmit={handleSubmit}>
                   <Form.Group controlId="formFullName" className="mb-3">
-                    <Form.Label className="fw-bold">Full Name:</Form.Label>
+                    <Form.Label style={{ color: '#333', fontWeight: 'bold' }}>Full Name:</Form.Label>
                     <div className="input-group">
-                      <span className="input-group-text">
+                      <span className="input-group-text" style={{ backgroundColor: '#d3d3d3' }}>
                         <FaUser />
                       </span>
                       <Form.Control
@@ -96,14 +105,20 @@ function Register() {
                         value={fullname}
                         onChange={(e) => setFullName(e.target.value)}
                         required
+                        style={{
+                          backgroundColor: '#f5f5f5',
+                          borderRadius: '8px',
+                          border: '1px solid #ccc',
+                          color: '#333',
+                        }}
                       />
                     </div>
                   </Form.Group>
 
                   <Form.Group controlId="formUsername" className="mb-3">
-                    <Form.Label className="fw-bold">Username:</Form.Label>
+                    <Form.Label style={{ color: '#333', fontWeight: 'bold' }}>Username:</Form.Label>
                     <div className="input-group">
-                      <span className="input-group-text">
+                      <span className="input-group-text" style={{ backgroundColor: '#d3d3d3' }}>
                         <FaUser />
                       </span>
                       <Form.Control
@@ -112,14 +127,20 @@ function Register() {
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                         required
+                        style={{
+                          backgroundColor: '#f5f5f5',
+                          borderRadius: '8px',
+                          border: '1px solid #ccc',
+                          color: '#333',
+                        }}
                       />
                     </div>
                   </Form.Group>
 
                   <Form.Group controlId="formPassword" className="mb-3">
-                    <Form.Label className="fw-bold">Password:</Form.Label>
+                    <Form.Label style={{ color: '#333', fontWeight: 'bold' }}>Password:</Form.Label>
                     <div className="input-group">
-                      <span className="input-group-text">
+                      <span className="input-group-text" style={{ backgroundColor: '#d3d3d3' }}>
                         <FaLock />
                       </span>
                       <Form.Control
@@ -128,14 +149,20 @@ function Register() {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
+                        style={{
+                          backgroundColor: '#f5f5f5',
+                          borderRadius: '8px',
+                          border: '1px solid #ccc',
+                          color: '#333',
+                        }}
                       />
                     </div>
                   </Form.Group>
 
                   <Form.Group controlId="formConfirmPassword" className="mb-3">
-                    <Form.Label className="fw-bold">Confirm Password:</Form.Label>
+                    <Form.Label style={{ color: '#333', fontWeight: 'bold' }}>Confirm Password:</Form.Label>
                     <div className="input-group">
-                      <span className="input-group-text">
+                      <span className="input-group-text" style={{ backgroundColor: '#d3d3d3' }}>
                         <FaLock />
                       </span>
                       <Form.Control
@@ -144,6 +171,12 @@ function Register() {
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         required
+                        style={{
+                          backgroundColor: '#f5f5f5',
+                          borderRadius: '8px',
+                          border: '1px solid #ccc',
+                          color: '#333',
+                        }}
                       />
                     </div>
                   </Form.Group>
@@ -151,10 +184,15 @@ function Register() {
                   {error && <p className="text-danger">{error}</p>}
 
                   <Button
-                    variant="success"
+                    variant="primary"
                     className="w-100"
                     type="submit"
                     disabled={loading}
+                    style={{ 
+                      borderRadius: '8px', 
+                      backgroundColor: '#00d2ff', 
+                      border: '1px solid #00d2ff', 
+                    }}
                   >
                     {loading ? 'Registering...' : 'Register Now'}
                   </Button>
@@ -163,7 +201,7 @@ function Register() {
                 <div className="text-center mt-3">
                   <p>
                     Already have an account?{' '}
-                    <Link to="/login" className="text-success fw-bold">
+                    <Link to="/login" className="text-success fw-bold" style={{ textDecoration: 'none' }}>
                       Login here.
                     </Link>
                   </p>

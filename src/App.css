@@ -3,6 +3,8 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  background-color: #1f1f1f; /* Dark background, perfect for the Hogwarts theme */
+  color: #f5f5f5; /* Light text for readability */
 }
 
 .logo {
@@ -11,13 +13,30 @@
   will-change: filter;
   transition: filter 300ms;
 }
+
+/* Gryffindor red & gold hover effect */
 .logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+  filter: drop-shadow(0 0 2em #9b111e); /* Gryffindor red */
 }
 
+/* React logo using Gryffindor color */
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #f8b704); /* Gryffindor gold */
+}
+
+/* Gryffindor Colors */
+.card {
+  padding: 2em;
+  background-color: #9b111e; /* Gryffindor Red */
+  color: #f8b704; /* Gryffindor Gold */
+}
+
+/* Slytherin hover effect */
+.read-the-docs {
+  color: #2d6a4f; /* Slytherin Green */
+}
+
+/* Optional: Define theme using hover effects per house */
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
@@ -33,10 +52,21 @@
   }
 }
 
-.card {
-  padding: 2em;
+@media (min-width: 768px) {
+  /* Specific styles for a responsive Hogwarts layout, for example, */
+  .logo {
+    height: 8em;
+    padding: 2em;
+  }
 }
 
-.read-the-docs {
-  color: #888;
+/* Optional: Set colors for individual house themes in other sections of the website */
+.hufflepuff { 
+  background-color: #f0c330; /* Hufflepuff Yellow */
+  color: #3e3a3a; /* Hufflepuff Dark color */
+}
+
+.ravenclaw {
+  background-color: #003b5c; /* Ravenclaw Blue */
+  color: #f5bc5e; /* Ravenclaw Bronze/Gold */
 }
