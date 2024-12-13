@@ -5,12 +5,9 @@
         import Navbar from 'react-bootstrap/Navbar';
         import Nav from 'react-bootstrap/Nav';
         import NavDropdown from 'react-bootstrap/NavDropdown';
-        import Table from 'react-bootstrap/Table';
-        import Button from 'react-bootstrap/Button';
-        import { FaUser, FaCog, FaSignOutAlt, FaEdit, FaTrash, FaPlus, FaEye} from 'react-icons/fa';
+        import { Table, Button, Modal, Form } from 'react-bootstrap';
+        import { FaSignOutAlt, FaEdit, FaTrash, FaPlus, FaEye} from 'react-icons/fa';
         import Swal from 'sweetalert2';
-        import Modal from 'react-bootstrap/Modal';
-        import Form from 'react-bootstrap/Form';
         import './Dashboard.css';
 
 
